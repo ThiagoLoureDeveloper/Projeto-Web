@@ -1,37 +1,37 @@
 package com.louredev.projweb.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Category implements Serializable {
+public class Product implements Serializable {
 	private static final long serialVersionUID = 1L;
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
+	private Double price;
 	
-	@JsonIgnore
-	@OneToMany(mappedBy = "category")
-	private List<Product> products = new ArrayList<>();
+	@ManyToOne
+	@JoinColumn(name = "category_id")
+	private Category category;
 	
-	public Category() {
+	public Product() {
 	}
 
-	public Category(Long id, String name) {
+	public Product(Long id, String name, Double price, Category category) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.price = price;
+		this.category = category;
 	}
 
 	public Long getId() {
@@ -49,9 +49,21 @@ public class Category implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	public List<Product> getProducts() {
-		return products;
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
 	@Override
@@ -70,7 +82,7 @@ public class Category implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Category other = (Category) obj;
+		Product other = (Product) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
